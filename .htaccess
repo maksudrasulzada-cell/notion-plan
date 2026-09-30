@@ -1,0 +1,13 @@
+# ── Notion embed üçün ──────────────────────────────────────────────
+# Kök .htaccess (9-cu bölmə) "X-Frame-Options: SAMEORIGIN" qoyur — bu, Notion-un
+# iframe-ini bloklayır. Bu qovluqda həmin header-i ləğv edirik.
+<IfModule mod_headers.c>
+    Header always unset X-Frame-Options
+    Header unset X-Frame-Options
+
+    # Vidcet yenilənəndə köhnə versiya brauzer keşində qalmasın
+    Header set Cache-Control "no-cache, max-age=0, must-revalidate"
+
+    # İstəsəniz yalnız Notion-dan iframe-ə icazə verin (sətrin əvvəlindəki # işarəsini silin):
+    # Header always set Content-Security-Policy "frame-ancestors 'self' https://*.notion.so https://*.notion.site"
+</IfModule>

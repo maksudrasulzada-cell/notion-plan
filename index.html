@@ -1,0 +1,1102 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Gündəlik plan</title>
+<script>
+/* Tema — ilk boyamadan əvvəl (ağ/qara "flash" olmasın) */
+(function () {
+  var t = 'auto', q = null;
+  try {
+    q = new URLSearchParams(location.search).get('theme');
+    var p = JSON.parse(localStorage.getItem('gp_prefs_v1') || '{}');
+    if (p.theme === 'light' || p.theme === 'dark') t = p.theme;
+    else if (q === 'light' || q === 'dark') t = q;
+  } catch (e) { if (q === 'light' || q === 'dark') t = q; }
+  if (t === 'auto') t = (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  color-scheme:light;
+  --bg:#fff;--bg2:#f7f6f3;--bg3:#ebeae6;
+  --ink:#37352f;--ink2:#67665f;--ink3:#9b9a97;
+  --line:rgba(55,53,47,.1);--line2:rgba(55,53,47,.2);--hover:rgba(55,53,47,.06);
+  --accent:#2a78d6;--accent-t:#1c5cab;--accent-soft:#e6f0fc;--track:#b7d3f6;
+  --red:#d03b3b;--red-t:#c22f2f;--red-soft:#fdecec;
+  --amber-soft:#fbf1d8;--amber-t:#7a5200;
+  --green:#0ca30c;--green-t:#1a7a1a;--green-soft:#e6f4e6;
+  --toast-bg:#37352f;--toast-t:#fff;--toast-a:#8ec0f5;
+  --shadow:0 8px 24px rgba(15,15,15,.14),0 2px 6px rgba(15,15,15,.08);
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#191919;--bg2:#222;--bg3:#2c2c2c;
+  --ink:#d4d4d4;--ink2:#9b9b9b;--ink3:#6e6e6e;
+  --line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.18);--hover:rgba(255,255,255,.06);
+  --accent:#3987e5;--accent-t:#6da7ec;--accent-soft:#1d3554;--track:#104281;
+  --red:#d03b3b;--red-t:#ef7a7a;--red-soft:#3a2323;
+  --amber-soft:#3b3320;--amber-t:#f0c05a;
+  --green:#0ca30c;--green-t:#5cc46b;--green-soft:#1f3322;
+  --toast-bg:#e6e6e6;--toast-t:#191919;--toast-a:#1c5cab;
+  --shadow:0 8px 24px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.4);
+}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink)}
+body{font:14px/1.45 ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";-webkit-font-smoothing:antialiased}
+[hidden]{display:none!important}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0;-webkit-tap-highlight-color:transparent}
+:is(button,input,textarea,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;display:inline-block;vertical-align:-3px}
+.app{max-width:1180px;margin:0 auto;padding:10px 14px 28px}
+
+/* ── başlıq ── */
+.hdr{display:flex;align-items:center;gap:8px;min-height:32px;margin-bottom:10px}
+.hdr-date{font-weight:600;font-size:15px}
+.hdr-date small{font-weight:400;color:var(--ink2);margin-left:6px;font-size:12.5px}
+.clock{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--ink2);font-size:13px}
+.ibtn{width:28px;height:28px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink2);flex:none}
+.ibtn:hover{background:var(--hover);color:var(--ink)}
+.warn{background:var(--amber-soft);color:var(--amber-t);padding:6px 10px;border-radius:8px;font-size:12.5px;margin-bottom:10px}
+
+/* ── düzülüş ── */
+.layout{display:grid;gap:12px}
+.side{display:grid;gap:10px;min-width:0}
+.main{min-width:0}
+@media(min-width:640px){.layout{grid-template-columns:292px minmax(0,1fr);gap:16px;align-items:start}}
+@media(min-width:640px) and (min-height:700px){.side{position:sticky;top:10px}}
+.card{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--bg);position:relative}
+.lbl{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink2)}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:6px;font-weight:500;font-size:13px;border:1px solid var(--line2);line-height:1.2;white-space:nowrap}
+.btn:hover{background:var(--hover)}
+.btn.pri{background:var(--accent);color:#fff;border-color:transparent}
+.btn.pri:hover{filter:brightness(1.08)}
+.btn.danger{color:var(--red-t)}
+.btn.sm{padding:3px 8px;font-size:12px}
+.meter{height:8px;border-radius:4px;background:var(--track);overflow:hidden}
+.meter>i{display:block;height:100%;background:var(--accent);border-radius:4px;width:0;transition:width .5s cubic-bezier(.2,.7,.2,1)}
+.meter.ok>i{background:var(--green)}
+
+/* ── bu gün (hero) ── */
+.hero-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.hero-cnt{font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.hero-num{font-size:48px;font-weight:600;line-height:1;letter-spacing:-.02em;margin:6px 0 10px}
+.hero-num small{font-size:14px;font-weight:500;color:var(--ink2);margin-left:6px;letter-spacing:0}
+.hero-num.ok{color:var(--green-t)}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:12px}
+@media(min-width:430px) and (max-width:639.98px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{padding:7px 10px;border-radius:8px;background:var(--bg2);min-width:0}
+.stat .lbl{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.stat .v{font-size:20px;font-weight:600;line-height:1.15;margin-top:2px;display:flex;align-items:center;gap:4px}
+.stat.late .v{color:var(--red-t)}
+.stat.pp .v{color:var(--amber-t)}
+
+/* ── geri sayım ── */
+.cd-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:5px}
+.cd-name{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.cd-when{color:var(--ink2);font-variant-numeric:tabular-nums;font-size:12.5px;flex:none}
+.cd-num{font-size:30px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:1.1;margin:4px 0 10px}
+.cd-num.none{color:var(--ink3);font-size:22px}
+.cd-foot{display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--line);padding-top:8px;color:var(--ink2);font-size:12.5px}
+.cd-foot b{font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* ── qrafik ── */
+.ch-hdr{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.segc{display:inline-flex;background:var(--bg2);border-radius:6px;padding:2px}
+.segc button{padding:2px 8px;border-radius:4px;font-size:12px;color:var(--ink2);line-height:1.5}
+.segc button.on{background:var(--bg);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.14)}
+.ch-nav{margin-left:auto;display:flex;align-items:center;gap:2px}
+.ch-nav .rng{font-size:12.5px;color:var(--ink2);min-width:96px;text-align:center;font-variant-numeric:tabular-nums}
+.ch-nav .ibtn{width:24px;height:24px}
+.ch-sum{display:flex;align-items:center;gap:8px;margin:8px 0 12px;font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.ch-sum .meter{flex:1;height:5px}
+.ch-sum b{color:var(--ink);font-weight:600}
+.plot{position:relative;display:flex;gap:2px;height:calc(var(--ph) + var(--xh) + 18px);--gut:0px;padding-left:var(--gut)}
+.plot.month{--gut:16px}
+.plot::after{content:"";position:absolute;left:var(--gut);right:0;bottom:var(--xh);border-top:1px solid var(--line2)}
+.grid-l{position:absolute;left:var(--gut);right:0;border-top:1px solid var(--line);pointer-events:none}
+.grid-l span{position:absolute;left:-16px;top:-7px;width:13px;text-align:right;font-size:10px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.col{flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;position:relative;border-radius:6px;z-index:1}
+.col.hov,.col:focus-visible{background:var(--hover)}
+.col:focus-visible{outline-offset:-2px}
+.bars{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1}
+.cap{font-size:10.5px;color:var(--ink2);font-variant-numeric:tabular-nums;margin-bottom:3px;white-space:nowrap}
+.col.today .cap{color:var(--ink);font-weight:600}
+.stack{display:flex;flex-direction:column-reverse;width:var(--bw,22px);max-width:100%}
+.stack i{display:block;width:100%;background:var(--track)}
+.stack i+i{margin-bottom:2px}
+.stack i:last-child{border-radius:4px 4px 0 0}
+.stack i.done{background:var(--accent)}
+.stack i.late{background:var(--red)}
+.stack i.left{background:var(--track)}
+.xl{height:var(--xh);padding-top:5px;text-align:center;font-size:11px;color:var(--ink2);line-height:1.2;position:relative}
+.xl b{display:block;font-weight:500;font-size:10.5px;margin-bottom:1px}
+.xl .dn{display:inline-block;min-width:20px;height:20px;line-height:20px;border-radius:10px;font-variant-numeric:tabular-nums;padding:0 3px}
+.col.today .xl .dn{background:var(--accent);color:#fff;font-weight:600}
+.col.sel:not(.today) .xl .dn{box-shadow:inset 0 0 0 1.5px var(--accent);color:var(--accent-t);font-weight:600}
+.plot.month .xl .dn{position:absolute;left:50%;top:3px;transform:translateX(-50%);font-size:10px;height:18px;line-height:18px;min-width:18px}
+.legend{display:flex;gap:12px;margin-top:8px;font-size:11.5px;color:var(--ink2);align-items:center;flex-wrap:wrap}
+.legend .k{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.legend .ibtn{margin-left:auto;width:24px;height:24px}
+.legend .ibtn.on{color:var(--accent-t);background:var(--accent-soft)}
+.tip{position:absolute;z-index:5;pointer-events:none;background:var(--bg);border:1px solid var(--line2);border-radius:8px;padding:7px 10px;box-shadow:var(--shadow);font-size:12px;min-width:150px;opacity:0;transition:opacity .12s;left:0;top:0}
+.tip.on{opacity:1}
+.tip .tt{font-weight:600;margin-bottom:3px;white-space:nowrap}
+.tip .tr{display:flex;align-items:center;gap:6px;line-height:1.6}
+.tip .tk{width:10px;height:3px;border-radius:2px;flex:none}
+.tip .tv{font-weight:600;font-variant-numeric:tabular-nums;min-width:14px;text-align:right}
+.tip .tl{color:var(--ink2)}
+.tbl-wrap{max-height:250px;overflow:auto;margin-top:4px}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.tbl th{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink2);text-align:right;font-weight:600;padding:4px 6px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg)}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl td{padding:4px 6px;text-align:right;font-variant-numeric:tabular-nums;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl tr.today td{font-weight:600}
+.tbl td.late{color:var(--red-t)}
+.tbl tfoot td{font-weight:600;border-bottom:0}
+.tbl .empty{text-align:center;color:var(--ink2);padding:12px}
+
+/* ── siyahı başlığı və tərtibçi ── */
+.lh{display:flex;align-items:center;gap:8px;margin-bottom:8px;min-height:28px;flex-wrap:wrap}
+.lh .t{font-weight:600;font-size:15px}
+.lh .sub{color:var(--ink2);font-size:12.5px}
+.lh .mini{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.lh .mini .meter{width:64px;height:5px}
+.lh .back{margin-left:auto}
+.cmp{border:1px solid var(--line);border-radius:10px;padding:6px 8px;margin-bottom:6px;transition:border-color .15s}
+.cmp.open{border-color:var(--line2)}
+.c-row{display:flex;align-items:center;gap:8px}
+.c-plus{width:24px;height:24px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink2);background:var(--bg2);flex:none}
+.c-in{flex:1;border:0;outline:0;padding:6px 0;font-size:14px;min-width:0;background:transparent}
+.c-in::placeholder{color:var(--ink3)}
+.c-in:focus-visible{outline:0}
+.c-row .btn{display:none}
+.cmp.open .c-row .btn{display:inline-flex}
+.c-opts{display:none;border-top:1px solid var(--line);margin-top:6px;padding-top:6px}
+.cmp.open .c-opts{display:block}
+.c-line{display:flex;align-items:center;gap:8px;margin-top:6px;min-width:0}
+.c-lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--ink2);width:40px;flex:none}
+.hint{font-size:11.5px;color:var(--ink3);margin:6px 0 0}
+.tin{border:1px solid var(--line2);border-radius:6px;padding:3px 6px;font-size:13px;background:var(--bg);color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* ── tarix seçici ── */
+.dp{min-width:0;flex:1}
+.dp-chips{display:flex;flex-wrap:wrap;gap:6px;padding:2px 2px 2px}
+.chip{flex:none;border:1px solid var(--line2);border-radius:8px;padding:4px 9px;font-size:12px;line-height:1.2;text-align:center;color:var(--ink2);position:relative;min-width:46px;background:var(--bg)}
+.chip b{display:block;font-weight:600;color:var(--ink);font-size:12px;white-space:nowrap}
+.chip small{display:block;font-size:10.5px;margin-top:1px;white-space:nowrap}
+.chip:hover{background:var(--hover)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:rgba(255,255,255,.85)}
+.chip.on b{color:#fff}
+.chip .dot{position:absolute;top:4px;right:5px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.chip.on .dot{background:#fff}
+.chip.cal{display:inline-flex;align-items:center;gap:5px;min-width:0}
+.chip.cal b{display:inline}
+.chip.sm{min-width:0;padding:4px 9px;color:var(--ink)}
+.chip.sm.on{color:#fff}
+.cal{margin-top:8px;border:1px solid var(--line);border-radius:10px;padding:8px;max-width:330px}
+.cal-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.cal-h b{font-size:13px}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.cal-wd{font-size:10px;color:var(--ink3);padding:2px 0 3px}
+.cal-d{height:32px;border-radius:6px;font-size:13px;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:1}
+.cal-d:hover{background:var(--hover)}
+.cal-d.o,.cal-d.p{color:var(--ink3)}
+.cal-d.t{box-shadow:inset 0 0 0 1.5px var(--accent);color:var(--accent-t);font-weight:600}
+.cal-d.on{background:var(--accent);color:#fff;font-weight:600}
+.cal-d .dot{width:4px;height:4px;border-radius:50%;background:var(--accent)}
+.cal-d.on .dot{background:#fff}
+
+/* ── işlər ── */
+.sec{margin-top:12px}
+.sec-h{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);padding:0 2px 4px;border-bottom:1px solid var(--line)}
+.sec-h .n{color:var(--ink3);font-weight:500}
+.sec-h.late{color:var(--red-t)}
+.sec-h.late .n{color:var(--red-t)}
+.sec-h .tg{display:inline-flex;align-items:center;gap:4px;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;padding:2px 4px;margin:-2px -4px;border-radius:4px}
+.sec-h .tg:hover{background:var(--hover)}
+.sec-h .tg svg{transition:transform .15s}
+.sec-h .tg.open svg{transform:rotate(90deg)}
+.task{display:flex;align-items:flex-start;gap:10px;padding:8px 6px;border-bottom:1px solid var(--line);border-radius:6px;position:relative}
+.task:hover{background:var(--hover)}
+.task.late{background:var(--red-soft)}
+.chk{width:18px;height:18px;border:1.5px solid var(--line2);border-radius:5px;flex:none;margin-top:2px;display:inline-flex;align-items:center;justify-content:center;color:#fff;transition:background .15s,border-color .15s;background:var(--bg)}
+.chk:hover{border-color:var(--accent)}
+.chk svg{width:12px;height:12px;stroke-width:2.4;opacity:0;transform:scale(.6);transition:.15s}
+.task.done .chk{background:var(--accent);border-color:var(--accent)}
+.task.done .chk svg{opacity:1;transform:none}
+.task.late .chk{border-color:var(--red)}
+.tm{flex:1;min-width:0;cursor:pointer}
+.tt{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.tm-time{font-variant-numeric:tabular-nums;font-weight:600;color:var(--accent-t);font-size:13px}
+.task.late .tm-time{color:var(--red-t)}
+.ttl{font-size:14px;overflow-wrap:anywhere}
+.task.done .ttl{text-decoration:line-through;color:var(--ink2)}
+.meta{display:flex;flex-wrap:wrap;gap:3px 10px;margin-top:2px;font-size:11.5px;color:var(--ink2);align-items:center}
+.meta .l{color:var(--red-t);font-weight:500;display:inline-flex;align-items:center;gap:3px}
+.meta svg.i{width:12px;height:12px;vertical-align:-2px}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:1px 6px;border-radius:4px;font-size:11px;background:var(--amber-soft);color:var(--amber-t);font-weight:500}
+.cd{display:inline-flex;align-items:center;gap:3px;font-variant-numeric:tabular-nums}
+.cd.soon{color:var(--accent-t);font-weight:600}
+.acts{display:flex;gap:2px;flex:none;margin-top:-2px}
+.acts .ibtn{width:26px;height:26px}
+@media(hover:hover){.acts{opacity:0;transition:opacity .12s}.task:hover .acts,.task:focus-within .acts{opacity:1}}
+.empty{padding:26px 12px;text-align:center;color:var(--ink2);font-size:13px}
+.empty b{display:block;color:var(--ink);font-size:14px;margin-bottom:4px;font-weight:600}
+
+/* ── menyu, pəncərə, toast ── */
+.menu-wrap{position:relative}
+.menu{position:absolute;right:0;top:32px;z-index:40;background:var(--bg);border:1px solid var(--line2);border-radius:10px;box-shadow:var(--shadow);padding:6px;min-width:250px;font-size:13px}
+.menu .mi{display:flex;align-items:center;gap:8px;width:100%;padding:7px 8px;border-radius:6px;text-align:left;color:var(--ink)}
+.menu .mi:hover{background:var(--hover)}
+.menu .mi.danger{color:var(--red-t)}
+.menu .sep{height:1px;background:var(--line);margin:4px 0}
+.menu .mrow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 8px}
+.menu .mnote{font-size:11.5px;color:var(--ink3);padding:4px 8px 2px}
+.ov{position:fixed;inset:0;background:rgba(15,15,15,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50;animation:fade .15s}
+.sheet{background:var(--bg);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);width:100%;max-width:430px;max-height:calc(100vh - 32px);overflow:auto;padding:14px 16px 16px;animation:pop .18s}
+@media(max-width:479.98px){.ov{align-items:flex-end;padding:0}.sheet{max-width:none;border-radius:14px 14px 0 0;max-height:94vh;border-bottom:0}}
+.sh-h{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.sh-h .t{font-weight:600;font-size:15px}
+.sh-h .ibtn{margin-left:auto}
+.sh-sub{color:var(--ink2);font-size:12.5px;margin-bottom:8px;overflow-wrap:anywhere}
+.fld{margin-top:10px}
+.fld>.c-lbl{display:block;width:auto;margin-bottom:5px}
+.txt{width:100%;border:1px solid var(--line2);border-radius:6px;padding:7px 10px;font-size:14px;background:var(--bg);color:var(--ink)}
+.txt:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+textarea.txt{min-height:120px;resize:vertical;font-size:12px;font-family:ui-monospace,Consolas,monospace}
+.sh-f{display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap}
+.sh-f .sp{flex:1}
+.hist{font-size:12px;color:var(--ink2);margin-top:10px;padding:8px 10px;border-radius:6px;background:var(--bg2);line-height:1.5}
+.hist b{color:var(--ink);font-weight:600}
+.toast{position:fixed;left:16px;right:16px;bottom:16px;width:fit-content;max-width:calc(100vw - 32px);margin:0 auto;background:var(--toast-bg);color:var(--toast-t);padding:7px 6px 7px 14px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:6px;box-shadow:var(--shadow);z-index:60;animation:up .2s}
+.toast>span{min-width:0;overflow-wrap:anywhere}
+.toast button{color:var(--toast-a);font-weight:600;padding:4px 8px;border-radius:5px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.toast button:hover{background:rgba(128,128,128,.2)}
+.toast button.tx{color:inherit;opacity:.7;padding:4px 6px}
+@keyframes fade{from{opacity:0}}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}}
+@keyframes up{from{opacity:0;transform:translateY(8px)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="app" class="app"></div>
+<script>
+(() => {
+'use strict';
+
+/* ───────── sabitlər ───────── */
+const LS_T = 'gp_tasks_v1', LS_P = 'gp_prefs_v1';
+const WD_S = ['B.e', 'Ç.a', 'Ç', 'C.a', 'C', 'Ş', 'B'];
+const WD_L = ['Bazar ertəsi', 'Çərşənbə axşamı', 'Çərşənbə', 'Cümə axşamı', 'Cümə', 'Şənbə', 'Bazar'];
+const MON = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avqust', 'sentyabr', 'oktyabr', 'noyabr', 'dekabr'];
+const MON_S = ['yan', 'fev', 'mar', 'apr', 'may', 'iyn', 'iyl', 'avq', 'sen', 'okt', 'noy', 'dek'];
+const ICONS = {
+  plus: '<path d="M8 3v10M3 8h10"/>',
+  check: '<path d="M3 8.5l3 3 7-7"/>',
+  chevL: '<path d="M10 3L5 8l5 5"/>',
+  chevR: '<path d="M6 3l5 5-5 5"/>',
+  arrowL: '<path d="M13 8H3M7 4L3 8l4 4"/>',
+  calendar: '<rect x="2" y="3" width="12" height="11" rx="2"/><path d="M2 7h12M5 1.5v3M11 1.5v3"/>',
+  clock: '<circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2.5 1.5"/>',
+  postpone: '<rect x="2" y="3" width="12" height="11" rx="2"/><path d="M2 7h12M5 1.5v3M11 1.5v3M6 10.5h4M8.5 9l1.5 1.5L8.5 12"/>',
+  pencil: '<path d="M11.5 2.5l2 2L5 13H3v-2z"/>',
+  trash: '<path d="M3 4h10M6 4V2.5h4V4M4.5 4l.6 9h5.8l.6-9"/>',
+  dots: '<circle cx="3.5" cy="8" r="1.4" fill="currentColor" stroke="none"/><circle cx="8" cy="8" r="1.4" fill="currentColor" stroke="none"/><circle cx="12.5" cy="8" r="1.4" fill="currentColor" stroke="none"/>',
+  x: '<path d="M4 4l8 8M12 4l-8 8"/>',
+  alert: '<circle cx="8" cy="8" r="6"/><path d="M8 5v3.5M8 11h.01"/>',
+  undo: '<path d="M3 7h7a3 3 0 0 1 0 6H8M5.5 4.5L3 7l2.5 2.5"/>',
+  repeat: '<path d="M3 8a5 5 0 0 1 8.5-3.5L13 6M13 2.5V6h-3.5M13 8a5 5 0 0 1-8.5 3.5L3 10M3 13.5V10h3.5"/>',
+  table: '<rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M2 7h12M7 3v10"/>',
+  bars: '<path d="M3 13V8M8 13V4M13 13V6"/>',
+  download: '<path d="M8 2v8M5 7l3 3 3-3M3 13h10"/>',
+  upload: '<path d="M8 10V2M5 5l3-3 3 3M3 13h10"/>',
+  sun: '<circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1 1M11.6 11.6l1 1M3.4 12.6l1-1M11.6 4.4l1-1"/>',
+  moon: '<path d="M13.5 9.5A6 6 0 0 1 6.5 2.5a6 6 0 1 0 7 7z"/>'
+};
+
+/* ───────── köməkçilər ───────── */
+const $ = (s, el = document) => el.querySelector(s);
+const pad = n => (n < 10 ? '0' : '') + n;
+const keyOf = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+const parseKey = k => { const p = k.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); };
+const addDays = (k, n) => { const d = parseKey(k); d.setDate(d.getDate() + n); return keyOf(d); };
+const diffDays = (a, b) => Math.round((parseKey(b) - parseKey(a)) / 864e5);
+const dowMon = k => (parseKey(k).getDay() + 6) % 7;            // 0 = bazar ertəsi
+const weekStart = k => addDays(k, -dowMon(k));
+const toDate = (k, hm) => { const d = parseKey(k); if (hm) { const p = hm.split(':'); d.setHours(+p[0], +p[1], 0, 0); } return d; };
+const dayOfTs = ts => keyOf(new Date(ts));
+const fmtHM = d => pad(d.getHours()) + ':' + pad(d.getMinutes());
+const fmtLong = k => { const d = parseKey(k); return WD_L[dowMon(k)] + ', ' + d.getDate() + ' ' + MON[d.getMonth()]; };
+const fmtShort = k => { const d = parseKey(k); return d.getDate() + ' ' + MON_S[d.getMonth()]; };
+const cap = s => s.charAt(0).toLocaleUpperCase('az') + s.slice(1);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const isValidKey = k => typeof k === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(k) && !isNaN(parseKey(k).getTime());
+
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false) continue;
+    if (k === 'class') el.className = v;
+    else if (k === 'text') el.textContent = v;
+    else if (k === 'style') el.style.cssText = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) {
+    if (kid == null || kid === false) continue;
+    el.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+  }
+  return el;
+}
+const rc = (el, ...kids) => el.replaceChildren(...kids.flat().filter(k => k != null && k !== false));
+function icon(name) {
+  const t = document.createElement('template');
+  t.innerHTML = '<svg class="i" viewBox="0 0 16 16" aria-hidden="true">' + ICONS[name] + '</svg>';
+  return t.content.firstChild;
+}
+function relLabel(k, today) {   // Bu gün / Sabah / Dünən / həftə günü
+  const n = diffDays(today, k);
+  if (n === 0) return 'Bu gün';
+  if (n === 1) return 'Sabah';
+  if (n === -1) return 'Dünən';
+  return WD_S[dowMon(k)];
+}
+function dative(k, today) {     // "sabaha", "bu günə", "5 oktyabra"
+  const n = diffDays(today, k);
+  if (n === 0) return 'bu günə';
+  if (n === 1) return 'sabaha';
+  const d = parseKey(k);
+  return d.getDate() + ' ' + MON[d.getMonth()] + (d.getMonth() === 3 ? 'ə' : 'a');
+}
+function fmtDur(ms) {           // "2 gün 3 saat" · "3 saat 12 dəq" · "12 dəq" · "45 san"
+  const s = Math.max(0, Math.floor(ms / 1000));
+  const d = Math.floor(s / 86400), hh = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
+  if (d) return d + ' gün' + (hh ? ' ' + hh + ' saat' : '');
+  if (hh) return hh + ' saat' + (m ? ' ' + m + ' dəq' : '');
+  if (m) return m + ' dəq';
+  return s + ' san';
+}
+function fmtClock(ms) {         // "00:27:51" · "2 gün 03:12:45"
+  const s = Math.max(0, Math.floor(ms / 1000));
+  const d = Math.floor(s / 86400);
+  const r = pad(Math.floor(s % 86400 / 3600)) + ':' + pad(Math.floor(s % 3600 / 60)) + ':' + pad(s % 60);
+  return d ? d + ' gün ' + r : r;
+}
+function parseTime(s) {         // "15:30 Görüş" və ya "Görüş 15:30" → saat + başlıq
+  let m = s.match(/^\s*([01]?\d|2[0-3]):([0-5]\d)\s+(.+)$/);
+  if (m) return { time: pad(+m[1]) + ':' + m[2], title: m[3].trim() };
+  m = s.match(/^(.+?)\s+([01]?\d|2[0-3]):([0-5]\d)\s*$/);
+  if (m) return { time: pad(+m[2]) + ':' + m[3], title: m[1].trim() };
+  return null;
+}
+
+/* ───────── vəziyyət və yaddaş ───────── */
+let tasks = [];
+const prefs = { theme: 'auto', range: 'week', view: 'chart', doneOpen: false };
+const st = { today: '', selected: '', anchor: '', cdTask: null, hov: -1 };
+let storeOK = true;
+
+function normalize(t) {
+  t.title = String(t.title || '').slice(0, 200);
+  if (!isValidKey(t.date)) t.date = keyOf(new Date());
+  t.time = /^\d{2}:\d{2}$/.test(t.time || '') ? t.time : null;
+  t.done = !!t.done;
+  if (t.done && !t.doneAt) t.doneAt = toDate(t.date).getTime();
+  if (!t.done) t.doneAt = null;
+  if (!t.createdAt) t.createdAt = Date.now();
+  if (!Array.isArray(t.moves)) t.moves = [];
+  if (!t.id) t.id = uid();
+}
+function loadAll() {
+  try {
+    const r = localStorage.getItem(LS_T); tasks = r ? JSON.parse(r) : [];
+    const p = localStorage.getItem(LS_P); if (p) Object.assign(prefs, JSON.parse(p));
+    localStorage.setItem('gp_probe', '1'); localStorage.removeItem('gp_probe');
+  } catch (e) { storeOK = false; }
+  if (!Array.isArray(tasks)) tasks = [];
+  tasks.forEach(normalize);
+}
+function saveTasks() {
+  if (!storeOK) return;
+  try { localStorage.setItem(LS_T, JSON.stringify(tasks)); } catch (e) { storeOK = false; }
+}
+function savePrefs() { try { localStorage.setItem(LS_P, JSON.stringify(prefs)); } catch (e) {} }
+
+let undoSnap = null;
+const snap = () => { undoSnap = JSON.stringify(tasks); };
+function commit(msg, undoable = true) {
+  saveTasks(); render();
+  if (!msg) return;
+  toast(msg, undoable && undoSnap ? () => { tasks = JSON.parse(undoSnap); tasks.forEach(normalize); saveTasks(); render(); } : null);
+}
+const byId = id => tasks.find(t => t.id === id);
+
+/* ───────── hesablamalar ───────── */
+function ctxNow() { const now = new Date(); return { now, today: keyOf(now) }; }
+function isLate(t, c) {
+  if (t.done) return false;
+  if (t.date < c.today) return true;
+  if (t.date === c.today && t.time) return toDate(t.date, t.time) <= c.now;
+  return false;
+}
+function statsMap(c) {          // gün → {done, left, late}
+  const m = new Map();
+  const g = k => { let v = m.get(k); if (!v) { v = { done: 0, left: 0, late: 0 }; m.set(k, v); } return v; };
+  for (const t of tasks) {
+    if (t.done) g(dayOfTs(t.doneAt)).done++;
+    else if (isLate(t, c)) g(t.date).late++;
+    else g(t.date).left++;
+  }
+  return m;
+}
+function lateAll(sm, today) { let n = 0; for (const [k, v] of sm) if (k <= today) n += v.late; return n; }
+function lateText(t, c) {
+  if (t.date < c.today) return diffDays(t.date, c.today) + ' gün gecikir';
+  const ms = c.now - toDate(t.date, t.time);
+  return ms < 60000 ? 'vaxtı keçdi' : fmtDur(ms) + ' gecikir';
+}
+function nextTimed(c) {
+  let best = null;
+  for (const t of tasks) {
+    if (t.done || !t.time || t.date < c.today || isLate(t, c)) continue;
+    if (!best || t.date < best.date || (t.date === best.date && t.time < best.time)) best = t;
+  }
+  return best;
+}
+/* tarix/saat dəyişməsi: irəli → təxirə sayılır, geriyə (ilk tarixə qədər) → sıfırlanır */
+function applyWhen(t, date, time) {           // → 'none' | 'fwd' | 'back'
+  time = time || null;
+  if (date === t.date && time === t.time) return 'none';
+  const fwd = date > t.date || (date === t.date && !!time && !!t.time && time > t.time);
+  if (fwd) t.moves.push({ fd: t.date, ft: t.time, td: date, tt: time, at: Date.now() });
+  else if (t.moves.length && date <= t.moves[0].fd) t.moves = [];
+  t.date = date; t.time = time;
+  return fwd ? 'fwd' : 'back';
+}
+
+/* ───────── əməliyyatlar ───────── */
+function addTask(title, date, time) {
+  snap();
+  tasks.push({ id: uid(), title, date, time: time || null, done: false, doneAt: null, createdAt: Date.now(), moves: [] });
+  const c = ctxNow();
+  commit(date !== st.selected ? cap(dative(date, c.today)) + ' əlavə edildi: ' + title : '', false);
+}
+function toggleDone(t) {
+  snap();
+  t.done = !t.done; t.doneAt = t.done ? Date.now() : null;
+  commit(t.done ? '«' + t.title + '» edildi' : '«' + t.title + '» geri qaytarıldı');
+}
+function reschedule(t, date, time) {
+  const c = ctxNow();
+  snap();
+  const r = applyWhen(t, date, time);
+  if (r === 'none') return;
+  commit('«' + t.title + '» ' + dative(date, c.today) + (r === 'fwd' ? ' təxirə salındı' : ' köçürüldü'));
+}
+function removeTask(t) {
+  snap();
+  tasks = tasks.filter(x => x.id !== t.id);
+  commit('«' + t.title + '» silindi');
+}
+
+/* ───────── skelet ───────── */
+const app = $('#app');
+const els = {};
+function buildShell() {
+  els.hdrDate = h('div', { class: 'hdr-date' });
+  els.clock = h('div', { class: 'clock' });
+  els.menuBtn = h('button', { class: 'ibtn', 'aria-label': 'Menyu', 'aria-haspopup': 'true', onclick: toggleMenu }, icon('dots'));
+  els.menuWrap = h('div', { class: 'menu-wrap' }, els.menuBtn);
+  els.warn = h('div', { class: 'warn', hidden: true, text: 'Brauzer yaddaşı əlçatan deyil — dəyişikliklər saxlanılmayacaq.' });
+
+  // Bu gün
+  els.heroCnt = h('span', { class: 'hero-cnt' });
+  els.heroNum = h('div', { class: 'hero-num' });
+  els.meterFill = h('i');
+  els.meter = h('div', { class: 'meter', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-label': 'Bu günün irəliləyişi' }, els.meterFill);
+  els.stDone = stat('Edilib'); els.stLeft = stat('Qalıb'); els.stLate = stat('Gecikən', 'late'); els.stPP = stat('Təxirə salınıb', 'pp');
+  els.hero = h('section', { class: 'card hero' },
+    h('div', { class: 'hero-top' }, h('span', { class: 'lbl', text: 'Bu gün' }), els.heroCnt),
+    els.heroNum, els.meter,
+    h('div', { class: 'stats' }, els.stDone.el, els.stLeft.el, els.stLate.el, els.stPP.el));
+
+  // Geri sayım
+  els.cdName = h('span', { class: 'cd-name' });
+  els.cdWhen = h('span', { class: 'cd-when' });
+  els.cdNum = h('div', { class: 'cd-num' });
+  els.cdDay = h('b');
+  els.cd = h('section', { class: 'card' },
+    h('div', { class: 'lbl', text: 'Növbəti iş' }),
+    h('div', { class: 'cd-row' }, els.cdName, els.cdWhen),
+    els.cdNum,
+    h('div', { class: 'cd-foot' }, h('span', { text: 'Günün sonuna' }), els.cdDay));
+
+  els.chart = h('section', { class: 'card chart', 'aria-label': 'Gün-gün qrafik' });
+  els.side = h('aside', { class: 'side' }, els.hero, els.cd, els.chart);
+
+  els.listHead = h('div', { class: 'lh' });
+  els.list = h('div', { class: 'list' });
+  els.main = h('section', { class: 'main' }, els.listHead, buildComposer(), els.list);
+
+  app.append(h('header', { class: 'hdr' }, els.hdrDate, els.clock, els.menuWrap), els.warn,
+    h('div', { class: 'layout' }, els.side, els.main));
+}
+function stat(lbl, cls) {
+  const v = h('div', { class: 'v', text: '0' });
+  return { el: h('div', { class: 'stat ' + (cls || '') }, h('span', { class: 'lbl', text: lbl }), v), v };
+}
+
+/* ───────── render ───────── */
+let lateSig = '';
+function sigOf(c) { let s = ''; for (const t of tasks) if (isLate(t, c)) s += t.id + ','; return s; }
+
+function render() {
+  const c = ctxNow();
+  st.today = c.today;
+  if (!st.selected) st.selected = c.today;
+  if (!st.anchor) st.anchor = c.today;
+  const sm = statsMap(c);
+  els.warn.hidden = storeOK;
+  renderHeader(c);
+  renderHero(c, sm);
+  renderCountdown(c);
+  renderChart(c, sm);
+  renderListHead(c, sm);
+  renderList(c);
+  composerSync(c, sm);
+  updateCountdowns(c.now);
+  lateSig = sigOf(c);
+}
+
+function renderHeader(c) {
+  els.hdrDate.replaceChildren(fmtLong(c.today), h('small', { text: String(c.now.getFullYear()) }));
+  els.clock.textContent = fmtHM(c.now);
+}
+
+function renderHero(c, sm) {
+  const s = sm.get(c.today) || { done: 0, left: 0, late: 0 };
+  const late = lateAll(sm, c.today);
+  const total = s.done + s.left + late;
+  const pct = total ? Math.round(s.done / total * 100) : 0;
+  const allDone = total > 0 && s.done === total;
+  const pp = tasks.reduce((n, t) => n + (!t.done && t.moves.length ? 1 : 0), 0);
+  els.heroCnt.textContent = total ? s.done + ' / ' + total + ' iş' : 'iş yoxdur';
+  els.heroNum.className = 'hero-num' + (allDone ? ' ok' : '');
+  els.heroNum.replaceChildren(total ? pct + '%' : '—', h('small', { text: allDone ? 'hamısı edilib' : (total ? 'edilib' : 'plan boşdur') }));
+  els.meter.classList.toggle('ok', allDone);
+  els.meter.setAttribute('aria-valuenow', String(pct));
+  els.meterFill.style.width = pct + '%';
+  els.stDone.v.textContent = String(s.done);
+  els.stLeft.v.textContent = String(s.left + late);
+  rc(els.stLate.v, late ? icon('alert') : null, String(late));
+  rc(els.stPP.v, pp ? icon('repeat') : null, String(pp));
+}
+
+function renderCountdown(c) {
+  const t = nextTimed(c);
+  st.cdTask = t;
+  els.cdName.textContent = t ? t.title : 'Saatlı iş yoxdur';
+  els.cdName.title = t ? t.title : '';
+  const when = !t || t.date === c.today ? '' : (diffDays(c.today, t.date) === 1 ? 'Sabah' : WD_S[dowMon(t.date)] + ' ' + fmtShort(t.date)) + ' · ';
+  els.cdWhen.textContent = t ? when + t.time : '';
+  els.cdNum.className = 'cd-num' + (t ? '' : ' none');
+}
+function updateCountdowns(now) {
+  const t = st.cdTask;
+  els.cdNum.textContent = t ? fmtClock(toDate(t.date, t.time) - now) : '— : — : —';
+  const end = new Date(now); end.setHours(24, 0, 0, 0);
+  els.cdDay.textContent = fmtDur(end - now);
+  for (const el of els.list.querySelectorAll('[data-cd]')) {
+    const task = byId(el.dataset.cd); if (!task) continue;
+    const ms = toDate(task.date, task.time) - now;
+    el.lastChild.textContent = (ms > 0 ? fmtDur(ms) : '0 dəq') + ' qalıb';
+    el.classList.toggle('soon', ms > 0 && ms <= 30 * 60000);
+  }
+  for (const el of els.list.querySelectorAll('[data-late]')) {   // bu günün vaxtı keçmiş işləri — canlı
+    const task = byId(el.dataset.late); if (!task) continue;
+    el.lastChild.textContent = lateText(task, { now, today: keyOf(now) });
+  }
+}
+
+/* ── qrafik ── */
+function chartDays() {
+  if (prefs.range === 'week') { const ws = weekStart(st.anchor); return Array.from({ length: 7 }, (_, i) => addDays(ws, i)); }
+  const d = parseKey(st.anchor), y = d.getFullYear(), m = d.getMonth(), n = new Date(y, m + 1, 0).getDate();
+  return Array.from({ length: n }, (_, i) => keyOf(new Date(y, m, i + 1)));
+}
+function rangeLabel(days) {
+  const a = parseKey(days[0]), b = parseKey(days[days.length - 1]);
+  if (prefs.range === 'month') return cap(MON[a.getMonth()]) + ' ' + a.getFullYear();
+  return a.getMonth() === b.getMonth()
+    ? a.getDate() + ' – ' + b.getDate() + ' ' + MON_S[a.getMonth()]
+    : a.getDate() + ' ' + MON_S[a.getMonth()] + ' – ' + b.getDate() + ' ' + MON_S[b.getMonth()];
+}
+function shiftRange(dir) {
+  if (prefs.range === 'week') st.anchor = addDays(st.anchor, 7 * dir);
+  else { const d = parseKey(st.anchor); st.anchor = keyOf(new Date(d.getFullYear(), d.getMonth() + dir, 1)); }
+  render();
+}
+function renderChart(c, sm) {
+  const days = chartDays(), isWeek = prefs.range === 'week';
+  const rows = days.map(k => { const v = sm.get(k) || { done: 0, left: 0, late: 0 }; return { k, ...v, total: v.done + v.left + v.late }; });
+  const max = Math.max(1, ...rows.map(r => r.total));
+  const sumDone = rows.reduce((n, r) => n + r.done, 0), sumTotal = rows.reduce((n, r) => n + r.total, 0);
+  const sumPct = sumTotal ? Math.round(sumDone / sumTotal * 100) : 0;
+  const inRange = days.includes(c.today);
+
+  st.hov = -1;
+  const segBtn = (val, lbl) => h('button', { type: 'button', class: prefs.range === val ? 'on' : '', 'aria-pressed': String(prefs.range === val), onclick: () => { prefs.range = val; savePrefs(); render(); } }, lbl);
+  const seg = h('div', { class: 'segc', role: 'group', 'aria-label': 'Dövr' }, segBtn('week', 'Həftə'), segBtn('month', 'Ay'));
+  const hdr = h('div', { class: 'ch-hdr' },
+    h('span', { class: 'lbl', text: 'Gün-gün' }), seg,
+    h('div', { class: 'ch-nav' },
+      h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Əvvəlki', onclick: () => shiftRange(-1) }, icon('chevL')),
+      h('span', { class: 'rng', text: rangeLabel(days) }),
+      h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Növbəti', onclick: () => shiftRange(1) }, icon('chevR')),
+      !inRange ? h('button', { type: 'button', class: 'btn sm', text: 'Bu gün', onclick: () => { st.anchor = c.today; render(); } }) : null));
+  const sum = h('div', { class: 'ch-sum' },
+    h('span', null, h('b', { text: sumDone + '/' + sumTotal }), ' edilib'),
+    h('div', { class: 'meter' + (sumTotal && sumDone === sumTotal ? ' ok' : '') }, h('i', { style: 'width:' + sumPct + '%' })),
+    h('span', { text: sumPct + '%' }));
+
+  let body;
+  if (prefs.view === 'table') body = chartTable(rows, c);
+  else {
+    const ph = isWeek ? 96 : 72, xh = isWeek ? 36 : 20;
+    const plot = h('div', { class: 'plot' + (isWeek ? '' : ' month'), style: '--ph:' + ph + 'px;--xh:' + xh + 'px' });
+    if (!isWeek) {                                   // ay rejimində şkala xətləri (cap etiketi yoxdur)
+      const ticks = max >= 2 ? [max, Math.ceil(max / 2)] : [max];
+      for (const v of ticks) plot.append(h('div', { class: 'grid-l', style: 'bottom:' + (xh + Math.round(v / max * ph)) + 'px' }, h('span', { text: String(v) })));
+    }
+    const todayN = parseKey(c.today).getDate(), todayMonth = c.today.slice(0, 7);
+    const cols = rows.map(r => {
+      const d = parseKey(r.k), n = d.getDate(), isT = r.k === c.today;
+      const col = h('button', { type: 'button', class: 'col' + (isT ? ' today' : '') + (r.k === st.selected ? ' sel' : ''),
+        'aria-label': fmtLong(r.k) + ': ' + r.done + ' edilib, ' + r.left + ' qalıb, ' + r.late + ' gecikən',
+        onclick: () => { st.selected = r.k; render(); },
+        onfocus: () => showTip(r, col), onblur: hideTip });
+      const bars = h('div', { class: 'bars' });
+      if (isWeek && r.total) bars.append(h('span', { class: 'cap', text: r.done + '/' + r.total }));
+      const stack = h('span', { class: 'stack', style: isWeek ? '' : '--bw:100%' });
+      const hpx = v => Math.max(3, Math.round(v / max * ph));
+      if (r.done) stack.append(h('i', { class: 'done', style: 'height:' + hpx(r.done) + 'px' }));
+      if (r.late) stack.append(h('i', { class: 'late', style: 'height:' + hpx(r.late) + 'px' }));
+      if (r.left) stack.append(h('i', { class: 'left', style: 'height:' + hpx(r.left) + 'px' }));
+      bars.append(stack);
+      const xl = h('span', { class: 'xl' });
+      if (isWeek) xl.append(h('b', { text: WD_S[dowMon(r.k)] }), h('span', { class: 'dn', text: String(n) }));
+      else {
+        let show = n === 1 || n % 5 === 0;
+        if (r.k.slice(0, 7) === todayMonth && !isT && Math.abs(n - todayN) <= 2) show = false;
+        if (show || isT) xl.append(h('span', { class: 'dn', text: String(n) }));
+      }
+      col.append(bars, xl);
+      return col;
+    });
+    plot.append(...cols);
+    // göstərici: ən yaxın sütun (nazik sütunlarda da rahat tutulur)
+    plot.addEventListener('pointermove', e => {
+      const a = cols[0].getBoundingClientRect(), b = cols[cols.length - 1].getBoundingClientRect();
+      const i = Math.floor((e.clientX - a.left) / ((b.right - a.left) / cols.length));
+      if (i < 0 || i >= cols.length) { plot.dispatchEvent(new Event('pointerleave')); return; }
+      if (i === st.hov) return;
+      st.hov = i;
+      cols.forEach((el, j) => el.classList.toggle('hov', j === i));
+      showTip(rows[i], cols[i]);
+    });
+    plot.addEventListener('pointerleave', () => { st.hov = -1; cols.forEach(el => el.classList.remove('hov')); hideTip(); });
+    els.plot = plot;
+    body = plot;
+  }
+  const legend = h('div', { class: 'legend' },
+    h('span', null, h('i', { class: 'k', style: 'background:var(--accent)' }), 'Edilib'),
+    h('span', null, h('i', { class: 'k', style: 'background:var(--track)' }), 'Qalıb'),
+    h('span', null, h('i', { class: 'k', style: 'background:var(--red)' }), 'Gecikən'),
+    h('button', { type: 'button', class: 'ibtn' + (prefs.view === 'table' ? ' on' : ''), title: prefs.view === 'table' ? 'Qrafik' : 'Cədvəl', 'aria-label': prefs.view === 'table' ? 'Qrafik göstər' : 'Cədvəl göstər', 'aria-pressed': String(prefs.view === 'table'),
+      onclick: () => { prefs.view = prefs.view === 'table' ? 'chart' : 'table'; savePrefs(); render(); } }, icon(prefs.view === 'table' ? 'bars' : 'table')));
+  els.tip = h('div', { class: 'tip', role: 'tooltip' });
+  els.chart.replaceChildren(hdr, sum, body, legend, els.tip);
+}
+function chartTable(rows, c) {
+  const list = rows.filter(r => r.total);
+  const tb = h('tbody');
+  if (!list.length) tb.append(h('tr', null, h('td', { class: 'empty', colspan: '5', text: 'Bu dövrdə iş yoxdur' })));
+  for (const r of list) tb.append(h('tr', { class: r.k === c.today ? 'today' : '' },
+    h('td', { text: WD_S[dowMon(r.k)] + ' ' + fmtShort(r.k) }),
+    h('td', { text: String(r.done) }), h('td', { text: String(r.left) }),
+    h('td', { class: r.late ? 'late' : '', text: String(r.late) }), h('td', { text: String(r.total) })));
+  const tot = rows.reduce((a, r) => ({ done: a.done + r.done, left: a.left + r.left, late: a.late + r.late, total: a.total + r.total }), { done: 0, left: 0, late: 0, total: 0 });
+  return h('div', { class: 'tbl-wrap' }, h('table', { class: 'tbl' },
+    h('thead', null, h('tr', null, ...['Gün', 'Edilib', 'Qalıb', 'Gecikən', 'Cəmi'].map(t => h('th', { text: t })))),
+    tb,
+    h('tfoot', null, h('tr', null, h('td', { text: 'Cəmi' }), h('td', { text: String(tot.done) }), h('td', { text: String(tot.left) }), h('td', { class: tot.late ? 'late' : '', text: String(tot.late) }), h('td', { text: String(tot.total) })))));
+}
+function showTip(r, col) {
+  const tip = els.tip; if (!tip || !els.plot) return;
+  const row = (color, lbl, v) => h('div', { class: 'tr' }, h('i', { class: 'tk', style: 'background:' + color }), h('span', { class: 'tv', text: String(v) }), h('span', { class: 'tl', text: lbl }));
+  tip.replaceChildren(h('div', { class: 'tt', text: fmtLong(r.k) }), row('var(--accent)', 'Edilib', r.done), row('var(--track)', 'Qalıb', r.left), row('var(--red)', 'Gecikən', r.late));
+  tip.classList.add('on');
+  const cr = col.getBoundingClientRect(), pr = els.chart.getBoundingClientRect(), plotTop = els.plot.getBoundingClientRect().top - pr.top;
+  let left = cr.left - pr.left + cr.width / 2 - tip.offsetWidth / 2;
+  left = Math.max(4, Math.min(left, pr.width - tip.offsetWidth - 4));
+  tip.style.left = left + 'px';
+  tip.style.top = Math.max(0, plotTop - tip.offsetHeight - 2) + 'px';
+}
+function hideTip() { if (els.tip) els.tip.classList.remove('on'); }
+
+/* ── siyahı ── */
+function renderListHead(c, sm) {
+  const k = st.selected, isT = k === c.today;
+  const v = sm.get(k) || { done: 0, left: 0, late: 0 };
+  const late = isT ? lateAll(sm, c.today) : v.late;
+  const total = v.done + v.left + late, pct = total ? Math.round(v.done / total * 100) : 0;
+  const rel = relLabel(k, c.today), named = rel !== WD_S[dowMon(k)];
+  rc(els.listHead,
+    h('div', { class: 't', text: named ? rel : fmtLong(k) }),
+    named ? h('div', { class: 'sub', text: fmtLong(k) }) : null,
+    total ? h('div', { class: 'mini' }, h('span', { text: v.done + '/' + total }), h('div', { class: 'meter' + (v.done === total ? ' ok' : '') }, h('i', { style: 'width:' + pct + '%' }))) : null,
+    !isT ? h('button', { type: 'button', class: 'btn sm back', onclick: () => { st.selected = c.today; st.anchor = c.today; render(); } }, icon('arrowL'), 'Bu günə') : null);
+}
+function renderList(c) {
+  const k = st.selected, isT = k === c.today, past = k < c.today;
+  const late = [], timed = [], untimed = [], done = [];
+  for (const t of tasks) {
+    if (t.done) { if (dayOfTs(t.doneAt) === k) done.push(t); continue; }
+    if (isT) { if (isLate(t, c)) { late.push(t); continue; } if (t.date !== k) continue; }
+    else { if (t.date !== k) continue; if (past) { late.push(t); continue; } }
+    (t.time ? timed : untimed).push(t);
+  }
+  const tkey = t => (t.time || '99:99');
+  late.sort((a, b) => (a.date + tkey(a)).localeCompare(b.date + tkey(b)) || a.createdAt - b.createdAt);
+  timed.sort((a, b) => a.time.localeCompare(b.time) || a.createdAt - b.createdAt);
+  untimed.sort((a, b) => a.createdAt - b.createdAt);
+  done.sort((a, b) => b.doneAt - a.doneAt);
+
+  const out = [];
+  if (late.length) out.push(section('Gecikən', late, 'late', c));
+  if (timed.length) out.push(section('Saatlı', timed, '', c));
+  if (untimed.length) out.push(section('Saatsız', untimed, '', c));
+  if (done.length) {
+    const tg = h('button', { type: 'button', class: 'tg' + (prefs.doneOpen ? ' open' : ''), 'aria-expanded': String(prefs.doneOpen), onclick: () => { prefs.doneOpen = !prefs.doneOpen; savePrefs(); render(); } }, icon('chevR'), 'Edilib ', h('span', { class: 'n', text: String(done.length) }));
+    out.push(h('div', { class: 'sec' }, h('div', { class: 'sec-h' }, tg), prefs.doneOpen ? done.map(t => row(t, c, 'done')) : null));
+  }
+  if (!out.length) {
+    const first = !tasks.length;
+    out.push(h('div', { class: 'empty' },
+      h('b', { text: first ? 'Salam! İlk işinizi əlavə edin' : (isT ? 'Bu gün üçün iş yoxdur' : past ? 'Bu gündə iş qeyd olunmayıb' : 'Bu gün üçün plan yoxdur') }),
+      first ? 'Məsələn «15:00 Müştəri zəngi» yazsanız saat avtomatik tanınır.' : 'Yuxarıdakı sahədən yeni iş əlavə edin.'));
+  }
+  els.list.replaceChildren(...out);
+}
+function section(title, items, cls, c) {
+  return h('div', { class: 'sec' },
+    h('div', { class: 'sec-h ' + cls }, cls === 'late' ? icon('alert') : null, title, h('span', { class: 'n', text: String(items.length) })),
+    items.map(t => row(t, c, cls)));
+}
+function row(t, c, kind) {
+  const late = kind === 'late';
+  const el = h('div', { class: 'task' + (late ? ' late' : '') + (t.done ? ' done' : ''), 'data-id': t.id });
+  const chk = h('button', { type: 'button', class: 'chk', role: 'checkbox', 'aria-checked': String(t.done), 'aria-label': (t.done ? 'Edilməmiş kimi işarələ: ' : 'Edildi: ') + t.title, onclick: () => toggleDone(t) }, icon('check'));
+  const title = h('div', { class: 'tt' }, t.time ? h('span', { class: 'tm-time', text: t.time }) : null, h('span', { class: 'ttl', text: t.title }));
+  const meta = h('div', { class: 'meta' });
+  if (late) meta.append(h('span', { class: 'l', 'data-late': t.date === c.today ? t.id : null }, icon('alert'),
+    (t.date < c.today ? fmtShort(t.date) + (t.time ? ' ' + t.time : '') + ' · ' : ''), h('span', { text: lateText(t, c) })));
+  else if (!t.done && t.time && t.date === c.today) meta.append(h('span', { class: 'cd', 'data-cd': t.id }, icon('clock'), h('span', { text: '…' })));
+  if (t.done && t.doneAt) meta.append(h('span', { text: fmtHM(new Date(t.doneAt)) + '-də edildi' + (t.date !== dayOfTs(t.doneAt) ? ' · plan: ' + fmtShort(t.date) : '') }));
+  if (t.moves.length) {
+    const m0 = t.moves[0], prev = m0.fd !== t.date ? fmtShort(m0.fd) : (m0.ft || '');
+    meta.append(h('span', { class: 'badge', title: 'Təxirə salınıb' }, icon('repeat'), t.moves.length + '× təxirə salınıb' + (prev ? ' · əvvəl ' + prev : '')));
+  }
+  const main = h('div', { class: 'tm', role: 'button', tabindex: '0', 'aria-label': 'Redaktə et: ' + t.title, onclick: () => openEdit(t), onkeydown: e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openEdit(t); } } }, title, meta.childNodes.length ? meta : null);
+  const acts = h('div', { class: 'acts' },
+    !t.done ? h('button', { type: 'button', class: 'ibtn', title: 'Təxirə sal', 'aria-label': 'Təxirə sal: ' + t.title, onclick: () => openPostpone(t) }, icon('postpone')) : null,
+    h('button', { type: 'button', class: 'ibtn', title: 'Redaktə et', 'aria-label': 'Redaktə et: ' + t.title, onclick: () => openEdit(t) }, icon('pencil')));
+  el.append(chk, main, acts);
+  return el;
+}
+
+/* ───────── tərtibçi (yeni iş) ───────── */
+const cmp = { date: null, time: '', manualTime: false, calOpen: false, calMonth: null, open: false, lastSel: null, sm: null, c: null };
+let cmpForm, cmpInput, cmpOpts;
+function buildComposer() {
+  cmpInput = h('input', { class: 'c-in', type: 'text', placeholder: 'Yeni iş əlavə et…', maxlength: '200', autocomplete: 'off', 'aria-label': 'Yeni iş' });
+  cmpOpts = h('div', { class: 'c-opts' });
+  cmpForm = h('form', { class: 'cmp', onsubmit: e => { e.preventDefault(); addFromComposer(); } },
+    h('div', { class: 'c-row' }, h('span', { class: 'c-plus' }, icon('plus')), cmpInput, h('button', { type: 'submit', class: 'btn pri', text: 'Əlavə et' })),
+    cmpOpts);
+  cmpInput.addEventListener('focus', () => { if (!cmp.open) { cmp.open = true; cmpForm.classList.add('open'); renderComposerOpts(); } });
+  cmpInput.addEventListener('input', () => {
+    if (cmp.manualTime) return;
+    const p = parseTime(cmpInput.value);
+    const nt = p ? p.time : '';
+    if (nt !== cmp.time) { cmp.time = nt; syncTimeRow(); }
+  });
+  cmpInput.addEventListener('keydown', e => { if (e.key === 'Escape') { cmpInput.blur(); closeComposer(); } });
+  document.addEventListener('pointerdown', e => { if (cmp.open && !cmpForm.contains(e.target) && !cmpInput.value.trim()) closeComposer(); });
+  return cmpForm;
+}
+function closeComposer() { cmp.open = false; cmp.calOpen = false; cmpForm.classList.remove('open'); }
+function composerSync(c, sm) {
+  cmp.c = c; cmp.sm = sm;
+  if (cmp.lastSel !== st.selected) { cmp.lastSel = st.selected; cmp.date = st.selected; }
+  if (cmp.open) renderComposerOpts();
+}
+function renderComposerOpts() {
+  const c = cmp.c || ctxNow(), sm = cmp.sm || statsMap(c);
+  const noneChip = h('button', { type: 'button', class: 'chip sm' + (cmp.time ? '' : ' on'), 'aria-pressed': String(!cmp.time), onclick: () => { cmp.time = ''; cmp.manualTime = true; syncTimeRow(); } }, 'Saatsız');
+  const tin = h('input', { type: 'time', class: 'tin', 'aria-label': 'Saat', value: cmp.time, oninput: e => { cmp.time = e.target.value; cmp.manualTime = true; syncTimeRow(); } });
+  cmpOpts.replaceChildren(
+    h('div', { class: 'c-line' }, h('span', { class: 'c-lbl', text: 'Tarix' }),
+      datePick({ value: cmp.date || st.selected, calOpen: cmp.calOpen, calMonth: cmp.calMonth, c, sm,
+        onPick: k => { cmp.date = k; cmp.calOpen = false; renderComposerOpts(); cmpInput.focus(); },
+        onCal: (open, month) => { cmp.calOpen = open; cmp.calMonth = month; renderComposerOpts(); } })),
+    h('div', { class: 'c-line' }, h('span', { class: 'c-lbl', text: 'Saat' }), noneChip, tin,
+      h('span', { class: 'hint', style: 'margin:0', text: cmp.time && !cmp.manualTime ? 'başlıqdan tanındı' : '' })));
+}
+function syncTimeRow() {
+  const chip = cmpOpts.querySelector('.chip.sm'), tin = cmpOpts.querySelector('input[type=time]'), hint = cmpOpts.querySelector('.hint');
+  if (chip) { chip.classList.toggle('on', !cmp.time); chip.setAttribute('aria-pressed', String(!cmp.time)); }
+  if (tin && tin.value !== cmp.time) tin.value = cmp.time;
+  if (hint) hint.textContent = cmp.time && !cmp.manualTime ? 'başlıqdan tanındı' : '';
+}
+function addFromComposer() {
+  let title = cmpInput.value.trim();
+  if (!title) { cmpInput.focus(); return; }
+  let time = cmp.time || null;
+  if (!cmp.manualTime) { const p = parseTime(title); if (p) { title = p.title; time = p.time; } }
+  if (!title) { cmpInput.focus(); return; }
+  const date = cmp.date || st.selected;
+  cmpInput.value = ''; cmp.time = ''; cmp.manualTime = false; cmp.calOpen = false;
+  addTask(title, date, time);
+  cmpInput.focus();
+}
+
+/* ───────── tarix seçici (çiplər + təqvim) ───────── */
+function datePick(o) {
+  const c = o.c, wrap = h('div', { class: 'dp' }), chips = h('div', { class: 'dp-chips' });
+  const near = Array.from({ length: 7 }, (_, i) => addDays(c.today, i));
+  if (o.value && !near.includes(o.value)) (o.value < c.today ? near.unshift(o.value) : near.push(o.value));
+  for (const k of near) {
+    const v = o.sm && o.sm.get(k), has = v && (v.left + v.late) > 0;
+    chips.append(h('button', { type: 'button', class: 'chip' + (k === o.value ? ' on' : ''), 'aria-pressed': String(k === o.value), 'aria-label': fmtLong(k), onclick: () => o.onPick(k) },
+      h('b', { text: relLabel(k, c.today) }), h('small', { text: fmtShort(k) }), has ? h('i', { class: 'dot' }) : null));
+  }
+  chips.append(h('button', { type: 'button', class: 'chip cal' + (o.calOpen ? ' on' : ''), 'aria-expanded': String(!!o.calOpen), onclick: () => o.onCal(!o.calOpen, o.calMonth) }, icon('calendar'), h('b', { text: 'Təqvim' })));
+  wrap.append(chips);
+  if (o.calOpen) wrap.append(calendar(o));
+  return wrap;
+}
+function calendar(o) {
+  const c = o.c, base = o.calMonth || (o.value || c.today).slice(0, 7);
+  const y = +base.slice(0, 4), m = +base.slice(5, 7);
+  const lead = (new Date(y, m - 1, 1).getDay() + 6) % 7;
+  const start = keyOf(new Date(y, m - 1, 1 - lead));
+  const nav = dir => o.onCal(true, keyOf(new Date(y, m - 1 + dir, 1)).slice(0, 7));
+  const g = h('div', { class: 'cal-g' }, WD_S.map(w => h('span', { class: 'cal-wd', text: w })));
+  for (let i = 0; i < 42; i++) {
+    const k = addDays(start, i), d = parseKey(k), other = d.getMonth() !== m - 1;
+    const v = o.sm && o.sm.get(k), has = v && (v.left + v.late) > 0;
+    g.append(h('button', { type: 'button', class: 'cal-d' + (other ? ' o' : '') + (k < c.today ? ' p' : '') + (k === c.today ? ' t' : '') + (k === o.value ? ' on' : ''), 'aria-label': fmtLong(k), 'aria-pressed': String(k === o.value), onclick: () => o.onPick(k) },
+      String(d.getDate()), has ? h('i', { class: 'dot' }) : null));
+  }
+  return h('div', { class: 'cal' },
+    h('div', { class: 'cal-h' },
+      h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Əvvəlki ay', onclick: () => nav(-1) }, icon('chevL')),
+      h('b', { text: cap(MON[m - 1]) + ' ' + y }),
+      h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Növbəti ay', onclick: () => nav(1) }, icon('chevR'))),
+    g);
+}
+
+/* ───────── pəncərələr ───────── */
+let sheetEl = null;
+function openSheet(o) {
+  closeSheet();
+  const sh = h('div', { class: 'sheet', role: 'dialog', 'aria-modal': 'true', 'aria-label': o.title },
+    h('div', { class: 'sh-h' }, h('div', { class: 't', text: o.title }), h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Bağla', onclick: closeSheet }, icon('x'))),
+    o.sub ? h('div', { class: 'sh-sub', text: o.sub }) : null,
+    o.body,
+    o.footer ? h('div', { class: 'sh-f' }, ...o.footer) : null);
+  sheetEl = h('div', { class: 'ov', onpointerdown: e => { if (e.target === sheetEl) closeSheet(); } }, sh);
+  document.body.append(sheetEl);
+  document.body.style.overflow = 'hidden';
+  const f = o.focus || ['input.txt', '.chip.on', '.chip', 'button'].map(s => sh.querySelector(s)).find(Boolean);
+  if (f) setTimeout(() => f.focus(), 30);
+}
+function closeSheet() { if (sheetEl) { sheetEl.remove(); sheetEl = null; document.body.style.overflow = ''; } }
+
+function openPostpone(t) {
+  const c = ctxNow(), sm = statsMap(c);
+  const ps = { date: t.date, time: t.time || '', calOpen: false, calMonth: null };
+  const body = h('div');
+  const apply = (k, time) => { closeSheet(); reschedule(t, k, time); };
+  const plusH = n => { const d = new Date(c.now.getTime() + n * 3600000); d.setMinutes(Math.ceil(d.getMinutes() / 5) * 5, 0, 0); apply(keyOf(d), fmtHM(d)); };
+  const draw = () => {
+    rc(body,
+      h('div', { class: 'fld' }, h('span', { class: 'c-lbl', text: 'Yeni tarix' }),
+        datePick({ value: ps.date, calOpen: ps.calOpen, calMonth: ps.calMonth, c, sm,
+          onPick: k => apply(k, ps.time),
+          onCal: (open, month) => { ps.calOpen = open; ps.calMonth = month; draw(); } })),
+      t.time ? h('div', { class: 'fld' }, h('span', { class: 'c-lbl', text: 'Saat' }),
+        h('div', { class: 'c-line', style: 'margin:0;flex-wrap:wrap' },
+          h('input', { type: 'time', class: 'tin', 'aria-label': 'Saat', value: ps.time, oninput: e => { ps.time = e.target.value; } }),
+          h('button', { type: 'button', class: 'chip sm', onclick: () => plusH(1) }, '+1 saat'),
+          h('button', { type: 'button', class: 'chip sm', onclick: () => plusH(3) }, '+3 saat'),
+          h('button', { type: 'button', class: 'chip sm', onclick: () => { ps.time = ''; apply(ps.date, ''); } }, 'Saatsız et'))) : null,
+      h('p', { class: 'hint', text: 'Tarixi seçən kimi tətbiq olunur' + (t.time ? ' (saatı əvvəl dəyişə bilərsiniz).' : '.') }));
+  };
+  draw();
+  openSheet({ title: 'Təxirə sal', sub: t.title + (t.moves.length ? ' · artıq ' + t.moves.length + '× təxirə salınıb' : ''), body,
+    footer: [h('span', { class: 'sp' }), h('button', { type: 'button', class: 'btn', text: 'Ləğv et', onclick: closeSheet })] });
+}
+
+function openEdit(t) {
+  const c = ctxNow(), sm = statsMap(c);
+  const es = { title: t.title, date: t.date, time: t.time || '', calOpen: false, calMonth: null };
+  const titleIn = h('input', { class: 'txt', type: 'text', value: es.title, maxlength: '200', 'aria-label': 'Başlıq', oninput: e => { es.title = e.target.value; }, onkeydown: e => { if (e.key === 'Enter') { e.preventDefault(); save(); } } });
+  const dateBox = h('div');
+  const drawDate = () => dateBox.replaceChildren(datePick({ value: es.date, calOpen: es.calOpen, calMonth: es.calMonth, c, sm,
+    onPick: k => { es.date = k; es.calOpen = false; drawDate(); },
+    onCal: (open, month) => { es.calOpen = open; es.calMonth = month; drawDate(); } }));
+  drawDate();
+  const noneChip = h('button', { type: 'button', class: 'chip sm' + (es.time ? '' : ' on'), onclick: () => { es.time = ''; tin.value = ''; noneChip.classList.add('on'); } }, 'Saatsız');
+  const tin = h('input', { type: 'time', class: 'tin', 'aria-label': 'Saat', value: es.time, oninput: e => { es.time = e.target.value; noneChip.classList.toggle('on', !es.time); } });
+  let hist = null;
+  if (t.moves.length) {
+    const chain = [t.moves[0].fd + (t.moves[0].ft ? ' ' + t.moves[0].ft : '')].concat(t.moves.map(m => m.td + (m.tt ? ' ' + m.tt : '')))
+      .map(s => { const [k, hm] = s.split(' '); return fmtShort(k) + (hm ? ' ' + hm : ''); }).join(' → ');
+    hist = h('div', { class: 'hist' }, h('b', { text: t.moves.length + '× təxirə salınıb: ' }), chain);
+  }
+  const save = () => {
+    const title = es.title.trim();
+    if (!title) { titleIn.focus(); return; }
+    closeSheet();
+    snap();
+    t.title = title;
+    const r = applyWhen(t, es.date, es.time);
+    commit(r === 'fwd' ? '«' + t.title + '» ' + dative(t.date, c.today) + ' təxirə salındı' : 'Yadda saxlanıldı');
+  };
+  openSheet({ title: 'İşi redaktə et', focus: titleIn,
+    body: h('div', null,
+      h('div', { class: 'fld' }, h('span', { class: 'c-lbl', text: 'Başlıq' }), titleIn),
+      h('div', { class: 'fld' }, h('span', { class: 'c-lbl', text: 'Tarix' }), dateBox),
+      h('div', { class: 'fld' }, h('span', { class: 'c-lbl', text: 'Saat' }), h('div', { class: 'c-line', style: 'margin:0' }, noneChip, tin)),
+      hist),
+    footer: [
+      h('button', { type: 'button', class: 'btn danger', onclick: () => { closeSheet(); removeTask(t); } }, icon('trash'), 'Sil'),
+      h('span', { class: 'sp' }),
+      h('button', { type: 'button', class: 'btn', text: 'Ləğv et', onclick: closeSheet }),
+      h('button', { type: 'button', class: 'btn pri', text: 'Yadda saxla', onclick: save })] });
+}
+
+/* ───────── menyu ───────── */
+let menuEl = null;
+const mq = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
+function effectiveTheme() {
+  if (prefs.theme === 'light' || prefs.theme === 'dark') return prefs.theme;
+  const q = new URLSearchParams(location.search).get('theme');
+  if (q === 'light' || q === 'dark') return q;
+  return mq && mq.matches ? 'dark' : 'light';
+}
+function applyTheme() { document.documentElement.setAttribute('data-theme', effectiveTheme()); }
+if (mq) (mq.addEventListener ? mq.addEventListener('change', applyTheme) : mq.addListener(applyTheme));
+
+function toggleMenu() {
+  if (menuEl) return closeMenu();
+  const themeBtn = (val, lbl) => h('button', { type: 'button', class: prefs.theme === val ? 'on' : '', 'aria-pressed': String(prefs.theme === val), onclick: () => { prefs.theme = val; savePrefs(); applyTheme(); closeMenu(); toggleMenu(); } }, lbl);
+  const mi = (ic, lbl, fn, cls) => h('button', { type: 'button', class: 'mi ' + (cls || ''), onclick: () => { closeMenu(); fn(); } }, icon(ic), lbl);
+  menuEl = h('div', { class: 'menu', role: 'menu' },
+    h('div', { class: 'mrow' }, h('span', { text: 'Görünüş' }), h('div', { class: 'segc' }, themeBtn('auto', 'Avto'), themeBtn('light', 'Açıq'), themeBtn('dark', 'Tünd'))),
+    h('div', { class: 'sep' }),
+    mi('download', 'Yedək çıxar (JSON)', exportData),
+    mi('upload', 'Yedəkdən bərpa et', importData),
+    h('div', { class: 'sep' }),
+    mi('trash', '30 gündən köhnə edilmişləri sil', pruneOld, 'danger'),
+    h('div', { class: 'mnote', text: 'Məlumat yalnız bu brauzerdə (bu cihazda) saxlanılır.' }));
+  els.menuWrap.append(menuEl);
+  els.menuBtn.setAttribute('aria-expanded', 'true');
+}
+function closeMenu() { if (menuEl) { menuEl.remove(); menuEl = null; els.menuBtn.setAttribute('aria-expanded', 'false'); } }
+document.addEventListener('pointerdown', e => { if (menuEl && !els.menuWrap.contains(e.target)) closeMenu(); });
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (sheetEl) closeSheet(); else if (menuEl) closeMenu();
+});
+
+function exportData() {
+  const json = JSON.stringify({ app: 'gundelik-plan', v: 1, exported: new Date().toISOString(), tasks });
+  const ta = h('textarea', { class: 'txt', readonly: true, 'aria-label': 'Yedək JSON' }); ta.value = json;
+  const copy = () => {
+    const ok = () => toast('Kopyalandı', null);
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(json).then(ok, () => { ta.select(); document.execCommand('copy'); ok(); });
+    else { ta.select(); document.execCommand('copy'); ok(); }
+  };
+  const dl = () => {
+    const a = h('a', { href: 'data:application/json;charset=utf-8,' + encodeURIComponent(json), download: 'gundelik-plan-' + keyOf(new Date()) + '.json' });
+    document.body.append(a); a.click(); a.remove();
+  };
+  setTimeout(() => { ta.setSelectionRange(0, 0); ta.scrollTop = 0; }, 60);
+  openSheet({ title: 'Yedək çıxar', sub: tasks.length + ' iş. Mətni kopyalayıb saxlayın və ya fayl kimi endirin.', body: ta, focus: ta,
+    footer: [h('button', { type: 'button', class: 'btn', onclick: copy }, 'Kopyala'), h('button', { type: 'button', class: 'btn', onclick: dl }, icon('download'), 'Fayl endir'), h('span', { class: 'sp' }), h('button', { type: 'button', class: 'btn pri', text: 'Bağla', onclick: closeSheet })] });
+}
+function importData() {
+  const ta = h('textarea', { class: 'txt', placeholder: 'Yedək JSON mətnini bura yapışdırın…', 'aria-label': 'Yedək JSON' });
+  const file = h('input', { type: 'file', accept: '.json,application/json', 'aria-label': 'Fayl seç', onchange: e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { ta.value = String(r.result); }; r.readAsText(f); } });
+  const parse = () => {
+    try { const d = JSON.parse(ta.value); const list = Array.isArray(d) ? d : d.tasks; if (!Array.isArray(list)) throw 0; return list.filter(x => x && typeof x === 'object'); }
+    catch (e) { toast('JSON oxunmadı — formatı yoxlayın', null); return null; }
+  };
+  const merge = () => { const list = parse(); if (!list) return; snap(); const map = new Map(tasks.map(t => [t.id, t])); let n = 0; for (const x of list) { const t = Object.assign({}, x); normalize(t); if (!map.has(t.id)) { tasks.push(t); n++; } } closeSheet(); commit(n + ' yeni iş əlavə olundu'); };
+  const replace = () => { const list = parse(); if (!list) return; snap(); tasks = list.map(x => { const t = Object.assign({}, x); normalize(t); return t; }); closeSheet(); commit(tasks.length + ' iş bərpa olundu (əvvəlkilər əvəz edildi)'); };
+  openSheet({ title: 'Yedəkdən bərpa et', body: h('div', null, ta, h('div', { class: 'fld' }, file)), focus: ta,
+    footer: [h('button', { type: 'button', class: 'btn', onclick: merge }, 'Birləşdir'), h('button', { type: 'button', class: 'btn danger', onclick: replace }, 'Hamısını əvəz et'), h('span', { class: 'sp' }), h('button', { type: 'button', class: 'btn', text: 'Ləğv et', onclick: closeSheet })] });
+}
+function pruneOld() {
+  const lim = Date.now() - 30 * 864e5;
+  const n = tasks.filter(t => t.done && t.doneAt < lim).length;
+  if (!n) { toast('30 gündən köhnə edilmiş iş yoxdur', null); return; }
+  snap();
+  tasks = tasks.filter(t => !(t.done && t.doneAt < lim));
+  commit(n + ' köhnə iş silindi');
+}
+
+/* ───────── toast ───────── */
+let toastEl = null, toastTimer = 0;
+function toast(msg, undo) {
+  hideToast();
+  toastEl = h('div', { class: 'toast', role: 'status' }, h('span', { text: msg, title: msg }),
+    undo ? h('button', { type: 'button', onclick: () => { undo(); hideToast(); } }, icon('undo'), 'Geri al') : null,
+    h('button', { type: 'button', class: 'tx', 'aria-label': 'Bağla', onclick: hideToast }, icon('x')));
+  document.body.append(toastEl);
+  toastTimer = setTimeout(hideToast, undo ? 7000 : 3000);
+}
+function hideToast() { clearTimeout(toastTimer); if (toastEl) { toastEl.remove(); toastEl = null; } }
+
+/* ───────── saat: hər saniyə ───────── */
+setInterval(() => {
+  const c = ctxNow();
+  els.clock.textContent = fmtHM(c.now);
+  if (c.today !== st.today) {                       // gecə yarısı keçdi → yeni gün
+    if (st.selected === st.today) st.selected = c.today;
+    if (st.anchor === st.today) st.anchor = c.today;
+    render(); return;
+  }
+  if (sigOf(c) !== lateSig) { render(); return; }  // hansısa işin vaxtı keçdi
+  updateCountdowns(c.now);
+}, 1000);
+window.addEventListener('storage', e => { if (e.key === LS_T) { loadAll(); render(); } });
+
+/* ───────── başlat ───────── */
+loadAll();
+applyTheme();
+buildShell();
+render();
+})();
+</script>
+</body>
+</html>
