@@ -22,7 +22,7 @@ Kök `.htaccess` `X-Frame-Options: SAMEORIGIN` verir, qovluqdakı `.htaccess` on
 `curl -sI https://aimedia.az/notion-plan/ | grep -i frame` (boş çıxmalıdır). GitHub Pages-də `.htaccess` işlənmir.
 
 Tema: `?theme=dark` və ya `?theme=light` parametri ilə (məs.
-`https://aimedia.az/notion-plan/?theme=dark`), ya da vidcetin sağ-üst `⋯` menyusundan.
+`https://maksudrasulzada-cell.github.io/notion-plan/?theme=dark`), ya da vidcetin sağ-üst `⋯` menyusundan.
 Notion-un tünd rejimi sistem rejimindən fərqli ola bilər — o halda menyudan seçin.
 
 ## Məlumat harada saxlanılır
