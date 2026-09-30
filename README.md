@@ -3,15 +3,23 @@
 Tək faylda (`index.html`) işləyən gündəlik iş paneli: bu günün irəliləyişi, geri sayım,
 gün-gün qrafik, gecikən işlər, təxirə salma, tarix/saat seçimi. Xarici kitabxana yoxdur.
 
+## Canlı ünvan (GitHub Pages)
+
+**https://maksudrasulzada-cell.github.io/notion-plan/** — repo: github.com/maksudrasulzada-cell/notion-plan
+
+Yeniləmək: bu qovluqda `git add -A && git commit -m "..." && git push` → 1–2 dəq sonra canlıdır
+(GitHub Pages 10 dəq keş saxlayır; Notion-da embed-i yeniləmək üçün səhifəni F5 edin).
+
 ## Notion-a necə qoyulur
 
-1. `notion-plan/` qovluğunu (index.html + .htaccess) hostinqə yükləyin, məs.
-   `public_html/notion-plan/` → ünvan: `https://aimedia.az/notion-plan/`
-2. Yoxlayın ki, cavabda `X-Frame-Options` YOXDUR (əks halda Notion boş göstərəcək):
-   `curl -sI https://aimedia.az/notion-plan/ | grep -i frame`
-3. Notion səhifəsində `/embed` yazın → ünvanı yapışdırın → **Embed link**.
-4. Embed-in hündürlüyünü aşağı kənarından dartıb ~650–700 px edin
+1. Notion səhifəsində `/embed` yazın → yuxarıdakı ünvanı yapışdırın → **Embed link**.
+2. Embed-in hündürlüyünü aşağı kənarından dartıb ~650–700 px edin
    (≥ 640 px enində iki sütun, dar olanda tək sütun olur).
+
+### Alternativ: Hostinger (aimedia.az)
+`notion-plan/` qovluğunu `public_html/notion-plan/`-a yükləyin → `https://aimedia.az/notion-plan/`.
+Kök `.htaccess` `X-Frame-Options: SAMEORIGIN` verir, qovluqdakı `.htaccess` onu ləğv edir — yoxlayın:
+`curl -sI https://aimedia.az/notion-plan/ | grep -i frame` (boş çıxmalıdır). GitHub Pages-də `.htaccess` işlənmir.
 
 Tema: `?theme=dark` və ya `?theme=light` parametri ilə (məs.
 `https://aimedia.az/notion-plan/?theme=dark`), ya da vidcetin sağ-üst `⋯` menyusundan.
